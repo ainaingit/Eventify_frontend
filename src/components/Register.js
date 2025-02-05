@@ -1,10 +1,9 @@
-// src/components/Register.js
 import React, { useState } from 'react';
 
 function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [number, setNumber] = useState('');
+  const [numero, setNumero] = useState(''); // Utilisation de 'numero' pour l'état
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -16,7 +15,7 @@ function Register() {
       const response = await fetch('http://localhost:8080/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, number }),
+        body: JSON.stringify({ username, password, numero }), // 'numero' dans JSON.stringify
       });
       
       if (!response.ok) {
@@ -66,13 +65,13 @@ function Register() {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="number">Numéro de téléphone</label>
+                  <label htmlFor="numero">Numéro de téléphone</label>
                   <input
                     type="text"
-                    id="number"
+                    id="numero" // 'numero' pour correspondre avec l'état
                     className="form-control"
-                    value={number}
-                    onChange={(e) => setNumber(e.target.value)}
+                    value={numero}
+                    onChange={(e) => setNumero(e.target.value)} // Correspond à 'numero'
                     placeholder="0341234567"
                     required
                   />
