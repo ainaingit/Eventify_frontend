@@ -1,24 +1,39 @@
 // src/components/Accueil.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Importer axios
 import MenuHorizontal from './MenuHorizontal';
 import MenuVertical from './MenuVertical';
 import SearchBar from './SearchBar';
 
 function Accueil() {
   const [filteredEvents, setFilteredEvents] = useState([]);
+  const [allEvents, setAllEvents] = useState([]); // Pour stocker tous les événements récupérés
+
+  // Fonction pour récupérer les événements depuis le backend
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/client/events', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // Ajout du token d'authentification
+        },
+      });
+      setAllEvents(response.data); // Stocke tous les événements dans l'état
+      setFilteredEvents(response.data); // Initialiser les événements filtrés avec tous les événements
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+
+  // Effectuer la récupération des événements lors du chargement du composant
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   // Handle search functionality
   const handleSearch = (filters) => {
     console.log("Search filters:", filters);
 
-    // Exemple : List of events (this can come from API or DB)
-    const events = [
-      { id: 1, name: 'Music Concert', date: '2025-05-15', genre: 'Music', eventType: 'Concert' },
-      { id: 2, name: 'Tech Conference', date: '2025-06-20', genre: 'Technology', eventType: 'Conference' },
-      // Add more events...
-    ];
-
-    const filtered = events.filter(event => {
+    const filtered = allEvents.filter(event => {
       return (
         (!filters.date || event.date === filters.date) &&
         (!filters.genre || event.genre.toLowerCase().includes(filters.genre.toLowerCase())) &&
@@ -30,6 +45,7 @@ function Accueil() {
   };
 
   return (
+  
     <div className="container mt-5">
       <div className="row">
         {/* Horizontal Menu (Header or Navigation Bar) */}
@@ -70,18 +86,30 @@ function Accueil() {
           {/* Filtered Events */}
           <div className="mt-4">
             <h3>Filtered Events</h3>
-            <ul>
-              {filteredEvents.length > 0 ? (
-                filteredEvents.map(event => (
-                  <li key={event.id}>
-                    <h4>{event.name}</h4>
-                    <p>{event.date} | {event.genre} | {event.eventType}</p>
-                  </li>
-                ))
-              ) : (
-                <p>No events found based on the filters.</p>
-              )}
-            </ul>
+            {filteredEvents.length > 0 ? (
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Genre</th>
+                    <th>Event Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredEvents.map(event => (
+                    <tr key={event.id}>
+                      <td>{event.name}</td>
+                      <td>{event.date}</td>
+                      <td>{event.genre}</td>
+                      <td>{event.eventType}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No events found based on the filters.</p>
+            )}
           </div>
         </div>
       </div>
