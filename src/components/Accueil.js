@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Importer axios
 import MenuHorizontal from './MenuHorizontal';
 import MenuVertical from './MenuVertical';
-import SearchBar from './SearchBar';
+import Card from './Card'; // Importer le composant Card
 
 function Accueil() {
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -16,6 +16,7 @@ function Accueil() {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`, // Ajout du token d'authentification
         },
+        withCredentials: true,  // Si tu utilises des cookies, ajoute ceci
       });
       setAllEvents(response.data); // Stocke tous les événements dans l'état
       setFilteredEvents(response.data); // Initialiser les événements filtrés avec tous les événements
@@ -29,23 +30,7 @@ function Accueil() {
     fetchEvents();
   }, []);
 
-  // Handle search functionality
-  const handleSearch = (filters) => {
-    console.log("Search filters:", filters);
-
-    const filtered = allEvents.filter(event => {
-      return (
-        (!filters.date || event.date === filters.date) &&
-        (!filters.genre || event.genre.toLowerCase().includes(filters.genre.toLowerCase())) &&
-        (!filters.eventType || event.eventType.toLowerCase().includes(filters.eventType.toLowerCase()))
-      );
-    });
-
-    setFilteredEvents(filtered);
-  };
-
   return (
-  
     <div className="container mt-5">
       <div className="row">
         {/* Horizontal Menu (Header or Navigation Bar) */}
@@ -60,55 +45,30 @@ function Accueil() {
           <MenuVertical />
         </div>
 
-        {/* Right section: Search Bar and Accueil */}
+        {/* Right section: Accueil */}
         <div className="col-md-9">
-          {/* Search Bar placed at the top of the right section */}
-          <div className="row mt-4 justify-content-center">
-            <div className="col-md-8">
-              <SearchBar onSearch={handleSearch} />
-            </div>
-          </div>
-
           {/* Accueil Section */}
           <div className="row mt-4">
             <div className="col-md-12">
               <div className="card shadow">
                 <div className="card-header bg-info text-white">
-                  <h4 className="mb-0">Accueil</h4>
+                  <h4 className="mb-0">Explorer les événements</h4>
                 </div>
                 <div className="card-body">
-                  <p>Bienvenue sur la plateforme d'événements !</p>
+                  <p>Découvrez les événements disponibles sur la plateforme !</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Filtered Events */}
-          <div className="mt-4">
-            <h3>Filtered Events</h3>
+          <div className="row mt-4">
             {filteredEvents.length > 0 ? (
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Genre</th>
-                    <th>Event Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredEvents.map(event => (
-                    <tr key={event.id}>
-                      <td>{event.name}</td>
-                      <td>{event.date}</td>
-                      <td>{event.genre}</td>
-                      <td>{event.eventType}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              filteredEvents.map(event => (
+                <Card key={event.id} event={event} /> // Afficher chaque événement sous forme de carte
+              ))
             ) : (
-              <p>No events found based on the filters.</p>
+              <p>Aucun événement trouvé.</p>
             )}
           </div>
         </div>

@@ -19,7 +19,7 @@ function MenuHorizontal() {
               <Link className="nav-link" to="/event-feedback">Feedback & Reviews</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/search-events">Search Events</Link>
+              <Link className="nav-link" to="/search-events">Search Events</Link> {/* Redirection vers Search */}
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/logout">Log Out</Link> {/* Ajout de Log Out */}
