@@ -16,9 +16,7 @@ function MenuVertical() {
         <li className="nav-item">
           <Link className="nav-link" to="/suggestions">Suggestions</Link> {/* Ajout de Suggestions */}
         </li>
-        <li className="nav-item">
-          <Link className="nav-link" to="/logout">Log Out</Link> {/* Option Log Out */}
-        </li>
+        
       </ul>
     </div>
   );
