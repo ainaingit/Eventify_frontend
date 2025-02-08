@@ -38,7 +38,7 @@ const CreateEventForm = () => {
 
   // Fonction pour récupérer l'ID de l'organisateur depuis le token JWT
   useEffect(() => {
-    const token = localStorage.getItem('authToken');  // Récupérer le token JWT
+    const token = localStorage.getItem('token');  // Récupérer le token JWT
     if (token) {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));  // Décoder le payload du token
       setOrganizerId(decodedToken.id);  // Définir l'ID de l'organisateur à partir du token
@@ -66,27 +66,31 @@ const CreateEventForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     const eventData = new FormData();
-    eventData.append('title', event.title);
-    eventData.append('description', event.description);
-    eventData.append('date', event.date);
-    eventData.append('location', event.location);
-    eventData.append('maxParticipants', event.maxParticipants ? parseInt(event.maxParticipants) : null);
-    eventData.append('category.id', event.categoryId);
-    eventData.append('organizer.id', organizerId);
-
-    // Ajouter les images sélectionnées au FormData
+    
+    // Ajouter les données de l'événement
+    eventData.append('event', new Blob([JSON.stringify({
+      title: event.title,
+      description: event.description,
+      date: event.date,
+      location: event.location,
+      maxParticipants: event.maxParticipants ? parseInt(event.maxParticipants) : null,
+      categoryId: event.categoryId,
+      organizerId: organizerId
+    })], { type: 'application/json' }));
+  
+    // Ajouter les images
     event.images.forEach((image) => {
       eventData.append('images', image);
     });
-
+  
     // Envoie de la requête POST à l'API backend
     axios
-      .post('http://localhost:8080/api/client/events', eventData, {
+      .post('http://localhost:8080/api/client/events/events-with-image', eventData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization : `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
       .then((response) => {
@@ -105,7 +109,7 @@ const CreateEventForm = () => {
         console.error('Erreur lors de la création de l\'événement:', error);
       });
   };
-
+  
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Créer un événement</h2>

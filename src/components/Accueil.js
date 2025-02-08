@@ -33,21 +33,21 @@ function Accueil() {
   return (
     <div className="container mt-5">
       <div className="row">
-        {/* Horizontal Menu (Header or Navigation Bar) */}
+        {/* Menu horizontal */}
         <div className="col-12">
           <MenuHorizontal />
         </div>
       </div>
 
       <div className="row mt-4">
-        {/* Vertical Menu (Sidebar or Navigation) */}
+        {/* Menu vertical */}
         <div className="col-md-3">
           <MenuVertical />
         </div>
 
-        {/* Right section: Accueil */}
+        {/* Section droite : Affichage des événements */}
         <div className="col-md-9">
-          {/* Accueil Section */}
+          {/* Section Accueil */}
           <div className="row mt-4">
             <div className="col-md-12">
               <div className="card shadow">
@@ -61,7 +61,7 @@ function Accueil() {
             </div>
           </div>
 
-          {/* Filtered Events */}
+          {/* Affichage des événements filtrés */}
           <div className="row mt-4">
             {filteredEvents.length > 0 ? (
               filteredEvents.map(event => (
