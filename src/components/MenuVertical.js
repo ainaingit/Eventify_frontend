@@ -10,6 +10,7 @@ function MenuVertical() {
         <li className="nav-item">
           <Link className="nav-link" to="/create-event">Create Event</Link> {/* Ajout de Create Event */}
         </li>
+        
         <li className="nav-item">
           <Link className="nav-link" to="/manage-events">Manage Events</Link> {/* Ajout de Manage Events */}
         </li>

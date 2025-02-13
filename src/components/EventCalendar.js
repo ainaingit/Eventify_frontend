@@ -1,4 +1,3 @@
-// src/components/EventCalendar.js
 import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -9,6 +8,7 @@ import MenuVertical from "./MenuVertical";
 
 function EventCalendar() {
   const [events, setEvents] = useState([]);
+  const [message, setMessage] = useState(""); // Etat pour le message de succès ou d'erreur
 
   // Fonction pour récupérer les événements depuis le backend
   const fetchEvents = async () => {
@@ -41,6 +41,35 @@ function EventCalendar() {
       setEvents(formattedEvents);
     } catch (error) {
       console.error("Erreur lors du chargement des événements:", error);
+      setMessage("Erreur lors du chargement des événements."); // Message d'erreur
+    }
+  };
+
+  // Fonction pour ajouter un événement
+  const handleAddEvent = async (eventData) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setMessage("Aucun token trouvé, l'utilisateur doit se connecter.");
+        return;
+      }
+
+      const response = await axios.post("http://localhost:8080/api/client/events", eventData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("Événement créé :", response.data);
+      setEvents((prevEvents) => [...prevEvents, response.data]); // Ajouter l'événement à la liste
+      setMessage("Événement créé avec succès !"); // Message de succès
+
+      // Afficher une alerte en JS
+      alert("Événement créé avec succès !");
+
+    } catch (error) {
+      console.error("Erreur lors de la création de l'événement:", error);
+      setMessage("Erreur lors de la création de l'événement."); // Message d'erreur
     }
   };
 
@@ -70,6 +99,19 @@ function EventCalendar() {
               <h4 className="mb-0">Calendrier des Événements</h4>
             </div>
             <div className="card-body">
+              {/* Affichage du message de succès ou d'erreur */}
+              {message && (
+                <div
+                  style={{
+                    color: message.includes("Erreur") ? "red" : "green",
+                    fontWeight: "bold",
+                    marginBottom: "10px",
+                  }}
+                >
+                  {message}
+                </div>
+              )}
+
               <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
@@ -91,3 +133,5 @@ function EventCalendar() {
 }
 
 export default EventCalendar;
+
+// Dans ce composant EventCalendar, nous avons ajouté une fonction handleAddEvent pour ajouter un événement à la liste des événements. Cette fonction utilise axios.post pour envoyer une requête POST au backend avec les données de l'événement à créer. Si la requête réussit, nous ajoutons l'événement à la liste des événements et affichons un message de succès. Sinon, nous affichons un message d'erreur.

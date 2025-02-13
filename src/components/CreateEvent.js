@@ -14,87 +14,83 @@ const CreateEventForm = () => {
 
   const [categories, setCategories] = useState([]);
   const [organizerId, setOrganizerId] = useState(null);
-  const [imageError, setImageError] = useState('');  // Pour afficher l'erreur des images
+  const [imageError, setImageError] = useState('');  // Message d'erreur pour les images
 
-  // Récupérer la liste des catégories depuis le backend avec le token dans l'en-tête
+  // Récupérer la liste des catégories depuis l'API
   useEffect(() => {
     const token = localStorage.getItem('token');  // Récupérer le token JWT
     if (token) {
       axios.get('http://localhost:8080/api/event_categorie', {
         headers: {
-          Authorization: `Bearer ${token}`,  // Ajouter le token dans les en-têtes
+          Authorization: `Bearer ${token}`,
         },
       })
-      .then(response => {
-        setCategories(response.data);  // Assurez-vous que la réponse est un tableau d'objets contenant les catégories
-      })
-      .catch(error => {
-        console.error('Erreur lors du chargement des catégories:', error);
-      });
+        .then(response => {
+          setCategories(response.data);  // Assurez-vous que la réponse contient les catégories
+        })
+        .catch(error => {
+          console.error('Erreur lors du chargement des catégories:', error);
+        });
     } else {
       console.log('Token non trouvé');
     }
   }, []);
 
-  // Fonction pour récupérer l'ID de l'organisateur depuis le token JWT
-  useEffect(() => {
-    const token = localStorage.getItem('token');  // Récupérer le token JWT
-    if (token) {
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));  // Décoder le payload du token
-      setOrganizerId(decodedToken.id);  // Définir l'ID de l'organisateur à partir du token
-    }
-  }, []);
 
+  // Gestion des changements dans les champs du formulaire
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEvent({ ...event, [name]: value });
   };
 
+  // Gestion du changement des fichiers (images)
   const handleFileChange = (e) => {
     const selectedImages = Array.from(e.target.files);
-    
+
+    // Vérification du nombre d'images téléchargées
     if (selectedImages.length + event.images.length > 5) {
       setImageError('Vous ne pouvez télécharger que 5 images maximum.');
     } else {
       setImageError('');
       setEvent({
         ...event,
-        images: [...event.images, ...selectedImages]  // Ajoute les fichiers sélectionnés à la liste des images
+        images: [...event.images, ...selectedImages],  // Ajouter les nouvelles images à l'état
       });
     }
   };
 
+  // Soumission du formulaire pour créer un événement
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     const eventData = new FormData();
     
-    // Ajouter les données de l'événement
+    // Ajout des données de l'événement (JSON)
     eventData.append('event', new Blob([JSON.stringify({
       title: event.title,
       description: event.description,
       date: event.date,
       location: event.location,
       maxParticipants: event.maxParticipants ? parseInt(event.maxParticipants) : null,
-      categoryId: event.categoryId,
-      organizerId: organizerId
+      category: { id: event.categoryId },
+      organizerId: organizerId,
     })], { type: 'application/json' }));
-  
-    // Ajouter les images
+    
+    // Ajout des images
     event.images.forEach((image) => {
       eventData.append('images', image);
     });
-  
-    // Envoie de la requête POST à l'API backend
-    axios
-      .post('http://localhost:8080/api/client/events/events-with-image', eventData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
+
+    // Envoi des données au backend via POST
+    axios.post('http://localhost:8080/api/client/events/events-with-image', eventData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
       .then((response) => {
         console.log('Événement créé avec succès:', response.data);
+        // Réinitialisation du formulaire après la soumission
         setEvent({
           title: '',
           description: '',
@@ -102,21 +98,21 @@ const CreateEventForm = () => {
           location: '',
           maxParticipants: '',
           categoryId: '',
-          images: []  // Réinitialiser les images après soumission
+          images: [],
         });
       })
       .catch((error) => {
         console.error('Erreur lors de la création de l\'événement:', error);
       });
   };
-  
+
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Créer un événement</h2>
       <form onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-md-8">
-            {/* Left Column: Input fields */}
+            {/* Section des champs du formulaire */}
             <div className="mb-3">
               <label htmlFor="title" className="form-label">Titre de l'événement</label>
               <input
@@ -181,7 +177,7 @@ const CreateEventForm = () => {
               />
             </div>
 
-            {/* Liste déroulante des catégories */}
+            {/* Sélection de la catégorie */}
             <div className="mb-3">
               <label htmlFor="categoryId" className="form-label">Catégorie</label>
               <select
@@ -203,7 +199,7 @@ const CreateEventForm = () => {
           </div>
 
           <div className="col-md-4">
-            {/* Right Column: Image preview */}
+            {/* Section des images */}
             <div className="mb-3">
               <label htmlFor="images" className="form-label">Télécharger des images (jusqu'à 5)</label>
               <input
@@ -236,6 +232,7 @@ const CreateEventForm = () => {
           </div>
         </div>
 
+        {/* Bouton de soumission */}
         <div className="text-center mt-4">
           <button type="submit" className="btn btn-primary">Créer l'événement</button>
         </div>
