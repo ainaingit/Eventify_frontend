@@ -17,6 +17,9 @@ function MenuVertical() {
         <li className="nav-item">
           <Link className="nav-link" to="/suggestions">Suggestions</Link> {/* Ajout de Suggestions */}
         </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/mesparticipations">Je participe</Link> {/* Ajout de Suggestions */}
+        </li>
         
       </ul>
     </div>

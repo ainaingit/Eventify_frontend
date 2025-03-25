@@ -9,6 +9,7 @@ import EventCalendar from './components/EventCalendar';
 import Search from './components/Search';
 import CreateEvent from './components/CreateEvent';
 import MesEvents from './components/MesEvents';
+import MesParticipations from './components/mesparticipations';
 function App() {
   return (
     <div className="App">
@@ -20,6 +21,7 @@ function App() {
         <Route path="/search-events" element={<Search />} /> {/* Route pour Search Events */}
         <Route path="//create-event" element={<CreateEvent />} />
         <Route path="/manage-events" element={<MesEvents />} />
+        <Route path="/mesparticipations" element={<MesParticipations />} />
         {/* Ajoute d'autres routes ici */}
       </Routes>
       
