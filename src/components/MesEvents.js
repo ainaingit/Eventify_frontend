@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MenuHorizontal from "./MenuHorizontal";
 import MenuVertical from "./MenuVertical";
+import { useNavigate } from "react-router-dom";
 
 function MesEvents() {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState(null);
+  const [participants, setParticipants] = useState([]); // Ajoute un état pour les participants
+  const navigate = useNavigate();
 
   // Fonction pour récupérer les événements depuis le backend
   const fetchEvents = async () => {
@@ -34,14 +37,8 @@ function MesEvents() {
     fetchEvents();
   }, []);
 
-  // Fonction pour modifier un événement
-  const handleEdit = (eventId) => {
-    // Logique pour éditer l'événement, par exemple, rediriger vers un formulaire d'édition
-    console.log("Modifier l'événement avec l'ID :", eventId);
-  };
-
-  // Fonction pour supprimer un événement
-  const handleDelete = async (eventId) => {
+  // Fonction pour récupérer les participants de l'événement
+  const fetchParticipants = async (eventId) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -49,21 +46,32 @@ function MesEvents() {
         return;
       }
 
-      const response = await axios.delete(`http://localhost:8080/api/client/events/${eventId}`, {
+      // Envoi de la requête GET pour récupérer les participants de l'événement
+      const response = await axios.get(`http://localhost:8080/api/client/events/${eventId}/participants`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (response.status === 200) {
-        // Supprimer l'événement de l'état local après la suppression réussie
-        setEvents(events.filter(event => event.id !== eventId));
-        alert("Événement supprimé avec succès !");
-      }
+      setParticipants(response.data); // Stocke les participants dans l'état
+      console.log(response.data); // Affiche les participants dans la console (utile pour déboguer)
     } catch (err) {
-      setError("Erreur lors de la suppression de l'événement.");
+      setError("Erreur lors du chargement des participants.");
       console.error("Erreur :", err);
     }
+  };
+  const handleEdit = (eventId) => {
+    navigate(`/events/${eventId}/edit`); // Redirige vers la page de modification de l'événement
+  };
+
+  const handleDelete = async (eventId) => {
+    
+  }; 
+      
+  // Fonction pour voir les participants d'un événement
+  const handleViewParticipants = (eventId) => {
+    fetchParticipants(eventId); // Appel la fonction fetchParticipants pour récupérer les participants
+    navigate(`/events/${eventId}/participants`); // Redirige vers la page des participants
   };
 
   return (
@@ -111,7 +119,7 @@ function MesEvents() {
                         <td>{event.location}</td>
                         <td>{event.category?.name}</td>
                         <td>
-                          {/* Boutons d'action Modifier et Supprimer */}
+                          {/* Boutons d'action Modifier, Supprimer et Voir les participants */}
                           <button
                             className="btn btn-warning mr-2"
                             onClick={() => handleEdit(event.id)}
@@ -119,10 +127,16 @@ function MesEvents() {
                             Modifier
                           </button>
                           <button
-                            className="btn btn-danger"
+                            className="btn btn-danger mr-2"
                             onClick={() => handleDelete(event.id)}
                           >
                             Supprimer
+                          </button>
+                          <button
+                            className="btn btn-info"
+                            onClick={() => handleViewParticipants(event.id)}
+                          >
+                            Voir les participants
                           </button>
                         </td>
                       </tr>
