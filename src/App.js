@@ -4,7 +4,6 @@ import { Routes, Route} from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import Accueil from './components/Accueil';
-import './App.css';
 import EventCalendar from './components/EventCalendar';
 import Search from './components/Search';
 import CreateEvent from './components/CreateEvent';

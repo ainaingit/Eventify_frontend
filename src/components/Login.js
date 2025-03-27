@@ -1,4 +1,3 @@
-// src/components/Login.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -6,7 +5,7 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Hook pour la navigation
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,9 +22,7 @@ function Login() {
       }
       
       const data = await response.json();
-      // Stocke le token dans le localStorage
       localStorage.setItem('token', data.token);
-      // Redirige vers la page d'accueil
       navigate('/accueil');
     } catch (err) {
       setError(err.message);
@@ -33,54 +30,44 @@ function Login() {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card shadow">
-            <div className="card-header bg-primary text-white">
-              <h4 className="mb-0">Connexion</h4>
-            </div>
-            <div className="card-body">
-              <form onSubmit={handleLogin}>
-                <div className="form-group">
-                  <label htmlFor="username">Nom d'utilisateur</label>
-                  <input
-                    type="text"
-                    id="username"
-                    className="form-control"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Entrez votre nom d'utilisateur"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="password">Mot de passe</label>
-                  <input
-                    type="password"
-                    id="password"
-                    className="form-control"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Entrez votre mot de passe"
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary btn-block">
-                  Se connecter
-                </button>
-              </form>
-
-              {/* Lien de navigation vers la page d'inscription */}
-              <div style={{ marginTop: '20px' }}>
-                <p>
-                  Vous n'avez pas de compte ? <Link to="/register">S'inscrire</Link>
-                </p>
-              </div>
-
-              {error && <div className="alert alert-danger mt-3">{error}</div>}
-            </div>
+    <div className="d-flex align-items-center justify-content-center vh-100" style={{
+      background: 'url(https://source.unsplash.com/1600x900/?event,party) no-repeat center center/cover'
+    }}>
+      <div className="card shadow-lg p-4" style={{ width: '400px', borderRadius: '10px', background: 'rgba(255, 255, 255, 0.9)' }}>
+        <div className="text-center mb-4">
+          <h3 className="text-primary">Gestion d'Événements</h3>
+          <p className="text-muted">Connectez-vous pour gérer vos événements</p>
+        </div>
+        <form onSubmit={handleLogin}>
+          <div className="form-group mb-3">
+            <label htmlFor="username" className="fw-bold">Nom d'utilisateur</label>
+            <input
+              type="text"
+              id="username"
+              className="form-control"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Entrez votre nom d'utilisateur"
+              required
+            />
           </div>
+          <div className="form-group mb-3">
+            <label htmlFor="password" className="fw-bold">Mot de passe</label>
+            <input
+              type="password"
+              id="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Entrez votre mot de passe"
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-primary w-100">Se connecter</button>
+        </form>
+        <div className="text-center mt-3">
+          <p className="mb-1">Vous n'avez pas de compte ? <Link to="/register" className="text-primary">S'inscrire</Link></p>
+          {error && <div className="alert alert-danger mt-2">{error}</div>}
         </div>
       </div>
     </div>

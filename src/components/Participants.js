@@ -16,7 +16,7 @@ function Participants() {
         return;
       }
 
-      const response = await axios.get(`http://localhost:8080/api/events/${eventId}/participants`, {
+      const response = await axios.get(`http://localhost:8080/api/client/events/${eventId}/participants`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

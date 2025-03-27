@@ -45,34 +45,7 @@ function EventCalendar() {
     }
   };
 
-  // Fonction pour ajouter un événement
-  const handleAddEvent = async (eventData) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setMessage("Aucun token trouvé, l'utilisateur doit se connecter.");
-        return;
-      }
-
-      const response = await axios.post("http://localhost:8080/api/client/events", eventData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      console.log("Événement créé :", response.data);
-      setEvents((prevEvents) => [...prevEvents, response.data]); // Ajouter l'événement à la liste
-      setMessage("Événement créé avec succès !"); // Message de succès
-
-      // Afficher une alerte en JS
-      alert("Événement créé avec succès !");
-
-    } catch (error) {
-      console.error("Erreur lors de la création de l'événement:", error);
-      setMessage("Erreur lors de la création de l'événement."); // Message d'erreur
-    }
-  };
-
+  
   useEffect(() => {
     fetchEvents();
   }, []);
