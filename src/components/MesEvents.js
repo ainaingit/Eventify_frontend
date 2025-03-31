@@ -60,14 +60,43 @@ function MesEvents() {
       console.error("Erreur :", err);
     }
   };
+
   const handleEdit = (eventId) => {
     navigate(`/events/${eventId}/edit`); // Redirige vers la page de modification de l'événement
   };
 
   const handleDelete = async (eventId) => {
-    
-  }; 
-      
+    if (!window.confirm("Voulez-vous vraiment supprimer cet événement ?")) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Aucun token trouvé. L'utilisateur doit être connecté.");
+        return;
+      }
+
+      // Envoi de la requête POST pour supprimer l'événement
+      await axios.post(
+        "http://localhost:8080/api/client/events/delete",
+        { id: eventId }, // Envoi l'ID de l'événement dans le body
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Mise à jour de la liste des événements après suppression
+      setEvents(events.filter((event) => event.id !== eventId));
+    } catch (err) {
+      setError("Erreur lors de la suppression de l'événement.");
+      console.error("Erreur :", err);
+    }
+  };
+
   // Fonction pour voir les participants d'un événement
   const handleViewParticipants = (eventId) => {
     fetchParticipants(eventId); // Appel la fonction fetchParticipants pour récupérer les participants
