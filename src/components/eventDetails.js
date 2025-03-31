@@ -1,16 +1,23 @@
-// src/components/Card.js
+// src/components/EventDetails.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-function Card({ event }) {
+function EventDetails() {
+  const location = useLocation();  // Utiliser useLocation pour récupérer le state
+  const event = location.state?.event;  // Accéder à l'événement passé dans le state
+
+  if (!event) {
+    return <div>Événement introuvable.</div>;
+  }
+
   return (
-    <div className="col-md-4 mb-4">
+    <div className="container mt-5">
       <div className="card shadow-lg border-0 rounded-lg overflow-hidden">
         <img
-          src={event.images[0] || "https://via.placeholder.com/300"}
+          src={event.images[0] || "https://via.placeholder.com/600"}
           className="card-img-top"
           alt={event.title}
-          style={{ height: '200px', objectFit: 'cover' }}
+          style={{ height: '300px', objectFit: 'cover' }}
         />
         <div className="card-body">
           <h5 className="card-title text-center text-primary">{event.title}</h5>
@@ -28,20 +35,9 @@ function Card({ event }) {
             <small className="text-muted">Organisateur : {event.organizer?.username}</small>
           </p>
         </div>
-        <div className="card-footer text-center">
-          {/* Lien vers les détails de l'événement avec passage de l'événement dans le state */}
-          <Link 
-            to={{
-              pathname: `/event/${event.id}`, 
-              state: { event } // Passer l'événement complet dans le state
-            }} 
-            className="btn btn-primary w-100">
-            Voir
-          </Link>
-        </div>
       </div>
     </div>
   );
 }
 
-export default Card;
+export default EventDetails;

@@ -10,6 +10,7 @@ import CreateEvent from './components/CreateEvent';
 import MesEvents from './components/MesEvents';
 import MesParticipations from './components/mesparticipations';
 import Participants from './components/Participants';
+import EventDetails  from './components/eventDetails';
 function App() {
   return (
     <div className="App">
@@ -23,6 +24,8 @@ function App() {
         <Route path="/manage-events" element={<MesEvents />} />
         <Route path="/mesparticipations" element={<MesParticipations />} />
         <Route path="/events/:eventId/participants" element={<Participants />} />
+        <Route path="/event/:id" element={<EventDetails />} />
+
 
         {/* Ajoute d'autres routes ici */}
       </Routes>
