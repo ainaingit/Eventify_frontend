@@ -30,14 +30,14 @@ function Card({ event }) {
         </div>
         <div className="card-footer text-center">
           {/* Lien vers les détails de l'événement avec passage de l'événement dans le state */}
-          <Link 
-            to={{
-              pathname: `/event/${event.id}`, 
-              state: { event } // Passer l'événement complet dans le state
-            }} 
-            className="btn btn-primary w-100">
-            Voir
-          </Link>
+          <Link
+  to={`/event/${event.id}`}
+  state={{ event }} // Passage de l'objet event dans l'état
+  className="btn btn-primary w-100"
+>
+  Voir
+</Link>
+
         </div>
       </div>
     </div>

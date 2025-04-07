@@ -1,10 +1,9 @@
-// src/components/EventDetails.js
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 function EventDetails() {
-  const location = useLocation();  // Utiliser useLocation pour récupérer le state
-  const event = location.state?.event;  // Accéder à l'événement passé dans le state
+  const location = useLocation();
+  const event = location.state?.event;
 
   if (!event) {
     return <div>Événement introuvable.</div>;
@@ -34,6 +33,9 @@ function EventDetails() {
           <p className="card-text">
             <small className="text-muted">Organisateur : {event.organizer?.username}</small>
           </p>
+          <Link to="/events" className="btn btn-secondary w-100">
+            Retour à la liste des événements
+          </Link>
         </div>
       </div>
     </div>

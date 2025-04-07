@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 function SearchBar({ onSearch }) {
   const [date, setDate] = useState('');
   const [genre, setGenre] = useState('');
-  const [eventType, setEventType] = useState('');
+  const [location, setLocation] = useState(''); // Nouveau champ pour la location
+  const [description, setDescription] = useState(''); // Nouveau champ pour la description
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -13,7 +14,8 @@ function SearchBar({ onSearch }) {
     const filters = {
       date,
       genre,
-      eventType
+      location,
+      description
     };
 
     // Appeler la fonction onSearch passée en prop
@@ -21,8 +23,8 @@ function SearchBar({ onSearch }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="d-flex align-items-center mb-4">
-      <div className="form-group mr-3">
+    <form onSubmit={handleSubmit} className="d-flex flex-column flex-md-row align-items-start mb-4">
+      <div className="form-group mb-3 mb-md-0 mr-md-3 w-100">
         <label htmlFor="date" className="mr-2">Date</label>
         <input
           type="date"
@@ -33,7 +35,7 @@ function SearchBar({ onSearch }) {
         />
       </div>
 
-      <div className="form-group mr-3">
+      <div className="form-group mb-3 mb-md-0 mr-md-3 w-100">
         <label htmlFor="genre" className="mr-2">Genre</label>
         <input
           type="text"
@@ -45,19 +47,33 @@ function SearchBar({ onSearch }) {
         />
       </div>
 
-      <div className="form-group mr-3">
-        <label htmlFor="eventType" className="mr-2">Event Type</label>
+      <div className="form-group mb-3 mb-md-0 mr-md-3 w-100">
+        <label htmlFor="location" className="mr-2">Location</label>
         <input
           type="text"
-          id="eventType"
+          id="location"
           className="form-control"
-          value={eventType}
-          onChange={(e) => setEventType(e.target.value)}
-          placeholder="e.g., Concert"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder="e.g., New York"
         />
       </div>
 
-      <button type="submit" className="btn btn-primary">Search</button>
+      <div className="form-group mb-3 mb-md-0 mr-md-3 w-100">
+        <label htmlFor="description" className="mr-2">Description</label>
+        <input
+          type="text"
+          id="description"
+          className="form-control"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="e.g., A fun music concert"
+        />
+      </div>
+
+      <div className="d-flex justify-content-center mt-3 mt-md-0">
+        <button type="submit" className="btn btn-primary w-100 w-md-auto">Search</button>
+      </div>
     </form>
   );
 }
